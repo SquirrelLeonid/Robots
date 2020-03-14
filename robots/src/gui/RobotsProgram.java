@@ -19,7 +19,7 @@ public class RobotsProgram {
             MainApplicationFrame frame = new MainApplicationFrame();
             frame.pack();
             frame.setVisible(true);
-            frame.setExtendedState(Frame.MAXIMIZED_BOTH); //Расширяет главное окно программы до размеров экрана
+            frame.setExtendedState(Frame.MAXIMIZED_BOTH);
         });
     }
 }
