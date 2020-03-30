@@ -10,29 +10,33 @@ import javax.swing.*;
 
 import log.Logger;
 
-public class MainApplicationFrame extends JFrame {
-    private final JDesktopPane desktopPane = new JDesktopPane();
+public class MainApplicationFrame extends StorableJFrame {
+    private final JDesktopPane m_desktopPane = new JDesktopPane();
+    private final PropertiesKeeperSingleton m_keeper;
 
     public MainApplicationFrame() {
         initMainApplicationFrame();
-
-        LogWindow logWindow = createLogWindow();
-        GameWindow gameWindow = new GameWindow();
+        m_keeper = PropertiesKeeperSingleton.getInstance();
+        m_keeper.register(this.getTitle(), this);
+        GameWindow gameWindow = new GameWindow(m_keeper);
+        LogWindow logWindow = createLogWindow(m_keeper);
 
         addWindow(logWindow);
         addWindow(gameWindow);
 
-        tryRestoreProperties();
+        m_keeper.loadProperties();
     }
 
     private void initMainApplicationFrame() {
         //Make the big window be indented 50 pixels from each edge of the screen.
+        setTitle("MainApplicationFrame");
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset, screenSize.width - inset * 2, screenSize.height - inset * 2);
-        setContentPane(desktopPane);
+        setContentPane(m_desktopPane);
 
         setJMenuBar(generateMenuBar());
+        setMinimumSize(new Dimension(640, 480));
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -42,15 +46,14 @@ public class MainApplicationFrame extends JFrame {
         });
     }
 
-    protected LogWindow createLogWindow() {
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
-        setMinimumSize(logWindow.getSize());
+    protected LogWindow createLogWindow(PropertiesKeeperSingleton keeper) {
+        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), keeper);
         Logger.debug("Протокол работает");
         return logWindow;
     }
 
     protected void addWindow(JInternalFrame frame) {
-        desktopPane.add(frame);
+        m_desktopPane.add(frame);
         frame.setVisible(true);
     }
 
@@ -142,31 +145,11 @@ public class MainApplicationFrame extends JFrame {
                 options[0]
         );
         if (userAnswer == 0) {
-            saveWindowsState();
+            m_keeper.saveProperties();
+            m_keeper.unregister(this.getTitle());
             frame.dispose();
             System.exit(0);
         }
 
     }
-
-    private void saveWindowsState() {
-        JInternalFrame[] frames = desktopPane.getAllFrames();
-        PropertiesKeeper keeper = new PropertiesKeeper();
-        for (JInternalFrame frame : frames) {
-            keeper.saveProperties(frame);
-        }
-        keeper.serializeKeeper();
-    }
-
-    private void tryRestoreProperties() {
-        PropertiesKeeper keeper = PropertiesKeeper.deserializeKeeper();
-        if (keeper != null) {
-            JInternalFrame[] frames = desktopPane.getAllFrames();
-
-            for (JInternalFrame frame : frames) {
-                keeper.loadProperties(frame);
-            }
-        }
-    }
-
 }
