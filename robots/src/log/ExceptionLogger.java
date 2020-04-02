@@ -27,7 +27,7 @@ public class ExceptionLogger {
             Files.write(path, logBody.getBytes(), StandardOpenOption.APPEND, Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
 
         } catch (IOException exception) {
-            //Log will be create in project's folder. All right.
+            System.out.println("something went wrong when creating the log");
         }
     }
 }
