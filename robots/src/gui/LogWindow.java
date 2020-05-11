@@ -24,15 +24,19 @@ public class LogWindow extends StorableJInternalFrame implements LogChangeListen
         m_logContent = new TextArea("");
         m_logContent.setSize(200, 500);
 
+        initWindowState();
+        updateLogContent();
+
+        m_keeper = keeper;
+        m_keeper.register(this.title, this);
+    }
+
+    private void initWindowState() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
-        updateLogContent();
         setSize(WIDTH, HEIGHT);
-
-        m_keeper = keeper;
-        m_keeper.register(this.title, this);
     }
 
     private void updateLogContent() {

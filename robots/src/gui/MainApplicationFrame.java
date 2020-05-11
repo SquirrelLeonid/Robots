@@ -10,20 +10,15 @@ import javax.swing.*;
 
 import log.Logger;
 
-public class MainApplicationFrame extends StorableJFrame {
+class MainApplicationFrame extends StorableJFrame {
     private final JDesktopPane m_desktopPane = new JDesktopPane();
     private final PropertiesKeeperSingleton m_keeper;
 
-    public MainApplicationFrame() {
+    MainApplicationFrame() {
         initMainApplicationFrame();
         m_keeper = PropertiesKeeperSingleton.getInstance();
         m_keeper.register(this.getTitle(), this);
-        GameWindow gameWindow = new GameWindow(m_keeper);
-        LogWindow logWindow = createLogWindow(m_keeper);
-
-        addWindow(logWindow);
-        addWindow(gameWindow);
-
+        initInternalFrames();
         m_keeper.loadProperties();
     }
 
@@ -46,13 +41,19 @@ public class MainApplicationFrame extends StorableJFrame {
         });
     }
 
-    protected LogWindow createLogWindow(PropertiesKeeperSingleton keeper) {
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), keeper);
-        Logger.debug("Протокол работает");
-        return logWindow;
+    private void initInternalFrames() {
+        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), m_keeper);
+        //Robot is creating here to save encapsulation in future
+        Model.Robot robot = new Model.Robot();
+        GameWindow gameWindow = new GameWindow(m_keeper, robot);
+        RobotWindow robotWindow = new RobotWindow(m_keeper, robot);
+
+        addWindow(logWindow);
+        addWindow(gameWindow);
+        addWindow(robotWindow);
     }
 
-    protected void addWindow(JInternalFrame frame) {
+    private void addWindow(JInternalFrame frame) {
         m_desktopPane.add(frame);
         frame.setVisible(true);
     }
@@ -150,6 +151,5 @@ public class MainApplicationFrame extends StorableJFrame {
             frame.dispose();
             System.exit(0);
         }
-
     }
 }

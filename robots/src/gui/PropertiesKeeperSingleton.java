@@ -62,12 +62,12 @@ class PropertiesKeeperSingleton implements Serializable {
             ExceptionLogger.writeException(exception.getStackTrace(), "Exception during read file");
         }
 
-        if (windowsProperties.size() == 0)
+        if (windowsProperties.isEmpty())
             return;
         HashMap<String, HashMap<Storable.Property, String>> finalWindowsProperties = windowsProperties;
         m_storableWindows.forEach((String title, Storable object) -> {
             HashMap<Storable.Property, String> properties = finalWindowsProperties.get(title);
-            if (properties != null && properties.size() != 0) {
+            if (properties != null && !properties.isEmpty()) {
                 object.setProperties(finalWindowsProperties.get(title));
             }
         });

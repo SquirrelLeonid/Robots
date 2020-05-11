@@ -1,24 +1,47 @@
 package gui;
 
-import java.awt.BorderLayout;
+import Model.Robot;
+
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 public class GameWindow extends StorableJInternalFrame {
+
+    private final Robot m_robot;
     private final GameVisualizer m_visualizer;
     private final PropertiesKeeperSingleton m_keeper;
+
     private static final int WIDTH = 400;
     private static final int HEIGHT = 400;
 
-    public GameWindow(PropertiesKeeperSingleton keeper) {
+    GameWindow(PropertiesKeeperSingleton keeper, Robot robot) {
         super("Игровое поле", true, true, true, true);
-        m_visualizer = new GameVisualizer();
+        m_robot = robot;
+        m_visualizer = new GameVisualizer(m_robot);
+        initWindowState();
+        initEvents();
+        m_keeper = keeper;
+        keeper.register(this.title, this);
+    }
+
+    private void initWindowState() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
         setSize(WIDTH, HEIGHT);
-        m_keeper = keeper;
-        keeper.register(this.title, this);
+    }
+
+    private void initEvents() {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                m_robot.setTargetPosition(e.getPoint());
+                repaint();
+            }
+        });
     }
 
     @Override

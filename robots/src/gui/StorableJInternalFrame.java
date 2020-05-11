@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class StorableJInternalFrame extends JInternalFrame implements Storable {
 
-    StorableJInternalFrame (String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
+    StorableJInternalFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
         super(title, resizable, closable, maximizable, iconifiable);
     }
 
@@ -55,7 +55,7 @@ public class StorableJInternalFrame extends JInternalFrame implements Storable {
                     break;
                 case IS_ICON:
                     String isIconProperty = properties.get(Property.IS_ICON);
-                    if (isIconProperty.compareTo("" + Boolean.TRUE) == 0) {
+                    if (isIconProperty.compareTo(Boolean.TRUE.toString()) == 0) {
                         try {
                             this.setIcon(true);
                         } catch (PropertyVetoException exception) {
@@ -65,7 +65,7 @@ public class StorableJInternalFrame extends JInternalFrame implements Storable {
                     break;
                 case IS_MAXIMUM:
                     String isMaximumProperty = properties.get(Property.IS_MAXIMUM);
-                    if (isMaximumProperty.compareTo("" + Boolean.TRUE) == 0) {
+                    if (isMaximumProperty.compareTo(Boolean.TRUE.toString()) == 0) {
                         try {
                             this.setMaximum(true);
                         } catch (PropertyVetoException exception) {
