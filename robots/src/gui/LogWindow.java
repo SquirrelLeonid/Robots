@@ -3,37 +3,40 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.TextArea;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.util.Locale;
-
-import javax.swing.*;
+import javax.swing.JPanel;
 
 import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
 
-public class LogWindow extends JInternalFrame implements LogChangeListener {
+public class LogWindow extends StorableJInternalFrame implements LogChangeListener {
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
+    private final PropertiesKeeperSingleton m_keeper;
 
     private static final int WIDTH = 300;
-    private static final int HEIGHT = 800;
+    private static final int HEIGHT = 500;
 
-    public LogWindow(LogWindowSource logSource) {
+    public LogWindow(LogWindowSource logSource, PropertiesKeeperSingleton keeper) {
         super("Протокол работы", true, true, true, true);
         m_logSource = logSource;
         m_logSource.registerListener(this);
         m_logContent = new TextArea("");
         m_logContent.setSize(200, 500);
 
+        initWindowState();
+        updateLogContent();
+
+        m_keeper = keeper;
+        m_keeper.register(this.title, this);
+    }
+
+    private void initWindowState() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_logContent, BorderLayout.CENTER);
         getContentPane().add(panel);
         pack();
-        updateLogContent();
         setSize(WIDTH, HEIGHT);
-
     }
 
     private void updateLogContent() {
@@ -53,6 +56,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener {
     @Override
     public void dispose() {
         m_logSource.unregisterListener(this);
+        m_keeper.unregister(this.title);
         super.dispose();
     }
 }

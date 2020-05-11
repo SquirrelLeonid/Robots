@@ -1,5 +1,7 @@
 package gui;
 
+import log.ExceptionLogger;
+
 import java.awt.Frame;
 
 import javax.swing.SwingUtilities;
@@ -13,13 +15,12 @@ public class RobotsProgram {
 //          UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 //          UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
-            e.printStackTrace();
+            ExceptionLogger.writeException(e.getStackTrace(), "Something got wrong");
         }
         SwingUtilities.invokeLater(() -> {
             MainApplicationFrame frame = new MainApplicationFrame();
             frame.pack();
             frame.setVisible(true);
-            frame.setExtendedState(Frame.MAXIMIZED_BOTH);
         });
     }
 }
