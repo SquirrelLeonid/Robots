@@ -1,6 +1,7 @@
 package gui;
 
 import log.ExceptionLogger;
+import service.Scheduler;
 
 import java.awt.Frame;
 
@@ -19,6 +20,7 @@ public class RobotsProgram {
         }
         SwingUtilities.invokeLater(() -> {
             MainApplicationFrame frame = new MainApplicationFrame();
+            Scheduler.runAllTasks();
             frame.pack();
             frame.setVisible(true);
         });

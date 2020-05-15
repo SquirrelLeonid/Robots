@@ -1,4 +1,9 @@
-package Model;
+package model;
+
+import log.ExceptionLogger;
+import service.AppliedSolver;
+import service.Scheduler;
+import service.Taskable;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;
@@ -6,7 +11,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Robot {
+public class Robot extends Taskable {
 
     private Timer m_timer;
 
@@ -25,12 +30,26 @@ public class Robot {
 
     public Robot() {
         m_timer = new Timer();
-        m_timer.schedule(new TimerTask() {
+        /*m_timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 onModelUpdateEvent();
             }
-        }, 0, 10);
+        }, 0, 10);*/
+        addTask(this,"onModelUpdateEvent", new TimerTask() {
+            @Override
+            public void run() {
+                while (true) {
+                    onModelUpdateEvent();
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex) {
+                        String message = String.format("Interrupt error in %s thread", Thread.currentThread().getName());
+                        ExceptionLogger.writeException(ex.getStackTrace(), message);
+                    }
+                }
+            }
+        }, 0);
         m_support = new PropertyChangeSupport(this);
     }
 
@@ -73,53 +92,14 @@ public class Robot {
     }
     //endregion
 
-    //region Applied methods
-    private double distance() {
-        double diffX = m_targetX - m_robotX;
-        double diffY = m_targetY - m_robotY;
-        return Math.sqrt(diffX * diffX + diffY * diffY);
-    }
-
-    private double angleTo() {
-        double diffX = m_targetX - m_robotX;
-        double diffY = m_targetY - m_robotY;
-
-        return asNormalizedRadians(Math.atan2(diffY, diffX));
-    }
-
-    private double asNormalizedRadians(double angle) {
-        while (angle < -2 * Math.PI) {
-            if (angle + 2 * Math.PI > 0)
-                break;
-            angle += 2 * Math.PI;
-        }
-
-        while (angle >= 2 * Math.PI) {
-            if (angle - 2 * Math.PI < 0)
-                break;
-            angle -= 2 * Math.PI;
-        }
-
-        return angle;
-    }
-
-    private double applyLimits(double value, double min, double max) {
-        if (value < min)
-            return min;
-        if (value > max)
-            return max;
-        return value;
-    }
-    //endregion
-
     private void onModelUpdateEvent() {
-        double distance = distance();
+        double distance = AppliedSolver.distance(m_robotX, m_robotY, m_targetX, m_targetY);
         if (distance < 0.5) {
             return;
         }
 
         double angularVelocity = 0;
-        double angleToTarget = angleTo();
+        double angleToTarget = AppliedSolver.angleTo(m_robotX, m_robotY, m_targetX, m_targetY);
 
         if (angleToTarget > m_robotDirection) {
             angularVelocity = m_maxAngularVelocity;
@@ -132,13 +112,13 @@ public class Robot {
     }
 
     private void moveRobot(double angularVelocity, double angleToTarget) {
-        angularVelocity = applyLimits(angularVelocity, -m_maxAngularVelocity, m_maxAngularVelocity);
+        angularVelocity = AppliedSolver.applyLimits(angularVelocity, -m_maxAngularVelocity, m_maxAngularVelocity);
         if (Math.abs(angleToTarget - m_robotDirection) < 0.1) {
             m_robotX = m_robotX + Math.cos(angleToTarget) * m_duration * m_maxVelocity;
             m_robotY = m_robotY + Math.sin(angleToTarget) * m_duration * m_maxVelocity;
         }
         else {
-            m_robotDirection = asNormalizedRadians(m_robotDirection + angularVelocity * m_duration);
+            m_robotDirection = AppliedSolver.asNormalizedRadians(m_robotDirection + angularVelocity * m_duration);
         }
         m_support.firePropertyChange("", false,true);
     }

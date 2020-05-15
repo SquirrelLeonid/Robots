@@ -1,6 +1,6 @@
 package gui;
 
-import Model.Robot;
+import model.Robot;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,28 +47,28 @@ class RobotMonitorVisualizer extends JPanel implements PropertyChangeListener {
         drawCoordinateAxis(g2d, circleCenterX, circleCenterY);
         drawBaseAngleValues(g2d, circleCenterX, circleCenterY);
 
-        AffineTransform t = AffineTransform.getRotateInstance(m_robot.getRobotDirectionRadians(), circleCenterX, circleCenterY);
-        g2d.setTransform(t);
-
-        g2d.setColor(Color.RED);
         drawCurrentAngleValue(g2d, circleCenterX, circleCenterY);
     }
 
     //region drawing circle
-    private void drawUnitCircle(Graphics2D g2d, int circleCenterX, int circleCenterY) {
+    private static void drawUnitCircle(Graphics2D g2d, int circleCenterX, int circleCenterY) {
         g2d.drawOval(circleCenterX - m_circleRadius / 2, circleCenterY - m_circleRadius / 2, m_circleRadius, m_circleRadius);
     }
 
-    private void drawCoordinateAxis(Graphics2D g2d, int circleCenterX, int circleCenterY) {
+    private static void drawCoordinateAxis(Graphics2D g2d, int circleCenterX, int circleCenterY) {
         g2d.drawLine(circleCenterX - m_halfRadius - m_ledgeValue, circleCenterY, circleCenterX + m_halfRadius + m_ledgeValue, circleCenterY);
         g2d.drawLine(circleCenterX, circleCenterY - m_halfRadius - m_ledgeValue, circleCenterX, circleCenterY + m_halfRadius + m_ledgeValue);
     }
 
-    private void drawBaseAngleValues(Graphics2D g2d, int circleCenterX, int circleCenterY) {
+    private static void drawBaseAngleValues(Graphics2D g2d, int circleCenterX, int circleCenterY) {
         g2d.drawString("0", circleCenterX + m_halfRadius - m_ledgeValue / 2, circleCenterY);
     }
 
     private void drawCurrentAngleValue(Graphics2D g2d, int circleCenterX, int circleCenterY) {
+        AffineTransform t = AffineTransform.getRotateInstance(m_robot.getRobotDirectionRadians(), circleCenterX, circleCenterY);
+        g2d.setTransform(t);
+        g2d.setColor(Color.RED);
+
         int endX = circleCenterX + m_halfRadius + m_ledgeValue;
         g2d.drawLine(circleCenterX, circleCenterY, endX, circleCenterY);
         g2d.drawLine(endX, circleCenterY, endX - 10, circleCenterY - 5);
