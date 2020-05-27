@@ -35,7 +35,7 @@ public class Scheduler {
         }
     }
 
-    static void addTask(Taskable object, String taskName, TimerTask task, long period) {
+    static void addTask(Taskable object, String taskName, TimerTask task) {
         Thread newThread = new Thread(task, taskName);
 
         if (!executingTasks.containsKey(object)) {

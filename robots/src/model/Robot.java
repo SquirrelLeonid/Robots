@@ -2,7 +2,6 @@ package model;
 
 import log.ExceptionLogger;
 import service.AppliedSolver;
-import service.Scheduler;
 import service.Taskable;
 
 import java.awt.*;
@@ -49,7 +48,7 @@ public class Robot extends Taskable {
                     }
                 }
             }
-        }, 0);
+        });
         m_support = new PropertyChangeSupport(this);
     }
 
