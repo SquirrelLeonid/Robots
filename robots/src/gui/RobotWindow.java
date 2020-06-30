@@ -1,6 +1,6 @@
 package gui;
 
-import Model.Robot;
+import model.Robot;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,10 +20,10 @@ public class RobotWindow extends StorableJInternalFrame {
         super("Окно робота", true, true, false, true);
         m_robot = robot;
         m_visualizer = new RobotMonitorVisualizer(m_robot);
-        m_robot.addPropertyChangeListener(m_visualizer);
-        initWindowState();
+        m_robot.addPropertyChangeListener(m_visualizer);;
         m_keeper = keeper;
         m_keeper.register(this.title, this);
+        initWindowState();
     }
 
 

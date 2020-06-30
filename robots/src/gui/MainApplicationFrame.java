@@ -44,7 +44,7 @@ class MainApplicationFrame extends StorableJFrame {
     private void initInternalFrames() {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), m_keeper);
         //Robot is creating here to save encapsulation in future
-        Model.Robot robot = new Model.Robot();
+        model.Robot robot = new model.Robot();
         GameWindow gameWindow = new GameWindow(m_keeper, robot);
         RobotWindow robotWindow = new RobotWindow(m_keeper, robot);
 
