@@ -1,16 +1,14 @@
 package gui;
 
 import model.Robot;
-
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.EventQueue;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 
 public class GameVisualizer extends JPanel {
 
@@ -19,14 +17,15 @@ public class GameVisualizer extends JPanel {
 
     GameVisualizer(Robot robot) {
         m_robot = robot;
-
+        /* GameVisualizer не передает свою задачу классу Scheduler
+            потому что реагирует на изменения модели класса Robot.
+        */
         m_timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 onRedrawEvent();
             }
         }, 0, 50);
-
         setDoubleBuffered(true);
     }
 
@@ -42,8 +41,8 @@ public class GameVisualizer extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
-        drawRobot(g2d, round(m_robot.getRobotX()), round(m_robot.getRobotY()), m_robot.getRobotDirectionRadians());
         drawTarget(g2d, round(m_robot.getTargetX()), round(m_robot.getTargetY()));
+        drawRobot(g2d, round(m_robot.getRobotX()), round(m_robot.getRobotY()), m_robot.getRobotDirectionRadians());
     }
 
     private static void fillOval(Graphics g, int centerX, int centerY, int diam1, int diam2) {

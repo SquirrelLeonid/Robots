@@ -1,32 +1,29 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.TextArea;
-import javax.swing.JPanel;
-
-import log.LogChangeListener;
 import log.LogEntry;
 import log.LogWindowSource;
+import log.LogChangeListener;
+import java.awt.TextArea;
+import java.awt.EventQueue;
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
 
 public class LogWindow extends StorableJInternalFrame implements LogChangeListener {
-    private LogWindowSource m_logSource;
     private TextArea m_logContent;
+    private LogWindowSource m_logSource;
     private final PropertiesKeeperSingleton m_keeper;
 
     private static final int WIDTH = 300;
     private static final int HEIGHT = 500;
 
-    public LogWindow(LogWindowSource logSource, PropertiesKeeperSingleton keeper) {
+    LogWindow(LogWindowSource logSource, PropertiesKeeperSingleton keeper) {
         super("Протокол работы", true, true, true, true);
         m_logSource = logSource;
-        m_logSource.registerListener(this);
         m_logContent = new TextArea("");
+        m_logSource.registerListener(this);
         m_logContent.setSize(200, 500);
-
         initWindowState();
         updateLogContent();
-
         m_keeper = keeper;
         m_keeper.register(this.title, this);
     }

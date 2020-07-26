@@ -1,20 +1,16 @@
 package gui;
 
-import model.Robot;
-
-import javax.swing.*;
 import java.awt.*;
-
+import model.Robot;
+import javax.swing.*;
 
 public class RobotWindow extends StorableJInternalFrame {
-
     private static final int m_defaultWidth = 400;
     private static final int m_defaultHeight = 400;
-
-    private RobotMonitorVisualizer m_visualizer;
-
     private final Robot m_robot;
     private final PropertiesKeeperSingleton m_keeper;
+
+    private RobotMonitorVisualizer m_visualizer;
 
     RobotWindow(PropertiesKeeperSingleton keeper, Robot robot) {
         super("Окно робота", true, true, false, true);
@@ -25,7 +21,6 @@ public class RobotWindow extends StorableJInternalFrame {
         m_keeper.register(this.title, this);
         initWindowState();
     }
-
 
     private void initWindowState() {
         JPanel panel = new JPanel(new BorderLayout());

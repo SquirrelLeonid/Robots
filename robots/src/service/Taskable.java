@@ -1,6 +1,5 @@
 package service;
 
-import java.util.ArrayList;
 import java.util.TimerTask;
 
 //there should be better name then "Taskable"

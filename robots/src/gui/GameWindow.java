@@ -1,14 +1,12 @@
 package gui;
 
 import model.Robot;
-
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 
 public class GameWindow extends StorableJInternalFrame {
-
     private final Robot m_robot;
     private final GameVisualizer m_visualizer;
     private final PropertiesKeeperSingleton m_keeper;
@@ -19,10 +17,10 @@ public class GameWindow extends StorableJInternalFrame {
     GameWindow(PropertiesKeeperSingleton keeper, Robot robot) {
         super("Игровое поле", true, true, true, true);
         m_robot = robot;
-        m_visualizer = new GameVisualizer(m_robot);
-        initWindowState();
-        initEvents();
         m_keeper = keeper;
+        m_visualizer = new GameVisualizer(m_robot);
+        initEvents();
+        initWindowState();
         keeper.register(this.title, this);
     }
 

@@ -1,20 +1,20 @@
 package log;
 
+import service.FastContainer;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class LogWindowSource {
-    private int m_iQueueLength;
-
-    private ArrayList<LogEntry> m_messages;
     private final ArrayList<LogChangeListener> m_listeners;
+
+    private int m_iQueueLength;
+    private FastContainer<LogEntry> m_messages;
     private volatile LogChangeListener[] m_activeListeners;
 
-    public LogWindowSource(int iQueueLength) //default size = 100
+    LogWindowSource(int iQueueLength) //default size = 100
     {
         m_iQueueLength = iQueueLength;
-        m_messages = new ArrayList<LogEntry>(iQueueLength);
-        m_listeners = new ArrayList<LogChangeListener>();
+        m_listeners = new ArrayList<>();
+        m_messages = new FastContainer<>(iQueueLength);
     }
 
     public void registerListener(LogChangeListener listener) {
@@ -31,11 +31,9 @@ public class LogWindowSource {
         }
     }
 
-    public void append(LogLevel logLevel, String strMessage) {
+    void append(LogLevel logLevel, String strMessage) {
         LogEntry entry = new LogEntry(logLevel, strMessage);
-        if (m_messages.size() == m_iQueueLength)
-            m_messages.remove(0);
-        m_messages.add(entry);
+        m_messages.addItem(entry);
         LogChangeListener[] activeListeners = m_activeListeners;
         if (activeListeners == null) {
             synchronized (m_listeners) {
@@ -51,16 +49,9 @@ public class LogWindowSource {
         }
     }
 
-    public int size() {
-        return m_messages.size();
-    }
-
     public Iterable<LogEntry> range(int startFrom, int count) {
-        if (startFrom < 0 || startFrom >= m_messages.size()) {
-            return Collections.emptyList();
-        }
-        int indexTo = Math.min(startFrom + count, m_messages.size());
-        return m_messages.subList(startFrom, indexTo);
+        int indexTo = startFrom + count;
+        return m_messages.getSegment(startFrom, indexTo);
     }
 
     public Iterable<LogEntry> all() {

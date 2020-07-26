@@ -1,14 +1,12 @@
 package gui;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import javax.swing.*;
-
-
 import log.Logger;
+import javax.swing.*;
+import log.ExceptionLogger;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
 
 class MainApplicationFrame extends StorableJFrame {
     private final JDesktopPane m_desktopPane = new JDesktopPane();
@@ -42,12 +40,11 @@ class MainApplicationFrame extends StorableJFrame {
     }
 
     private void initInternalFrames() {
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), m_keeper);
         //Robot is creating here to save encapsulation in future
         model.Robot robot = new model.Robot();
         GameWindow gameWindow = new GameWindow(m_keeper, robot);
         RobotWindow robotWindow = new RobotWindow(m_keeper, robot);
-
+        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), m_keeper);
         addWindow(logWindow);
         addWindow(gameWindow);
         addWindow(robotWindow);
@@ -60,19 +57,18 @@ class MainApplicationFrame extends StorableJFrame {
 
     private JMenuBar generateMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        JMenu lookAndFeelMenu = generateLookAndFeelMenu();
         JMenu testMenu = generateTestMenu();
+        JMenu lookAndFeelMenu = generateLookAndFeelMenu();
         JMenu closeWindowMenu = generateCloseWindowMenu();
 
-        menuBar.add(lookAndFeelMenu);
         menuBar.add(testMenu);
+        menuBar.add(lookAndFeelMenu);
         menuBar.add(closeWindowMenu);
         return menuBar;
     }
 
     private JMenu generateCloseWindowMenu() {
         JMenu closeWindowMenu = new JMenu("Закрыть приложение");
-
         JMenuItem closeApplication = new JMenuItem("Закрыть");
         closeApplication.addActionListener((event) -> {
             onWindowClosed(this);
@@ -87,7 +83,6 @@ class MainApplicationFrame extends StorableJFrame {
         JMenu lookAndFeelMenu = new JMenu("Режим отображения");
         lookAndFeelMenu.setMnemonic(KeyEvent.VK_V);
         lookAndFeelMenu.getAccessibleContext().setAccessibleDescription("Управление режимом отображения приложения");
-
         {
             JMenuItem systemLookAndFeel = new JMenuItem("Системная схема", KeyEvent.VK_S);
             systemLookAndFeel.addActionListener((event) -> {
@@ -112,7 +107,6 @@ class MainApplicationFrame extends StorableJFrame {
         JMenu testMenu = new JMenu("Тесты");
         testMenu.setMnemonic(KeyEvent.VK_T);
         testMenu.getAccessibleContext().setAccessibleDescription("Тестовые команды");
-
         {
             JMenuItem addLogMessageItem = new JMenuItem("Сообщение в лог", KeyEvent.VK_S);
             addLogMessageItem.addActionListener((event) -> {
@@ -129,7 +123,7 @@ class MainApplicationFrame extends StorableJFrame {
             SwingUtilities.updateComponentTreeUI(this);
         } catch (ClassNotFoundException | InstantiationException
                 | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            // just ignore
+            ExceptionLogger.writeException(e.getStackTrace(), "Something got wrong");
         }
     }
 

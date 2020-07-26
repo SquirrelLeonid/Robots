@@ -1,16 +1,15 @@
 package gui;
 
-import log.ExceptionLogger;
-
 import javax.swing.*;
-import java.beans.PropertyVetoException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
+import log.ExceptionLogger;
+import java.beans.PropertyVetoException;
 
 public class StorableJInternalFrame extends JInternalFrame implements Storable {
 
-    StorableJInternalFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {
-        super(title, resizable, closable, maximizable, iconifiable);
+    StorableJInternalFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconified) {
+        super(title, resizable, closable, maximizable, iconified);
     }
 
     @Override

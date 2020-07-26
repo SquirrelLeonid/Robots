@@ -1,17 +1,14 @@
 package gui;
 
-import log.ExceptionLogger;
-
 import java.io.*;
 import java.util.HashMap;
-
+import log.ExceptionLogger;
 
 class PropertiesKeeperSingleton implements Serializable {
-
-    private static final PropertiesKeeperSingleton m_keeper = new PropertiesKeeperSingleton();
+    private final HashMap<String, Storable> m_storableWindows;
     private static final String m_fileName = "RobotsWindowProperty.bin";
     private static final String m_directory = System.getProperty("user.home");
-    private final HashMap<String, Storable> m_storableWindows;
+    private static final PropertiesKeeperSingleton m_keeper = new PropertiesKeeperSingleton();
 
     private PropertiesKeeperSingleton() {
         m_storableWindows = new HashMap<>();

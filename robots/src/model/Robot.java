@@ -2,19 +2,14 @@ package model;
 
 import log.ExceptionLogger;
 import service.AppliedSolver;
-import service.Scheduler;
 import service.Taskable;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Timer;
 import java.util.TimerTask;
 
 public class Robot extends Taskable {
-
-    private Timer m_timer;
-
     private double m_robotX = 100;
     private double m_robotY = 100;
     private double m_robotDirection = 0;
@@ -29,16 +24,10 @@ public class Robot extends Taskable {
     private PropertyChangeSupport m_support;
 
     public Robot() {
-        m_timer = new Timer();
-        /*m_timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                onModelUpdateEvent();
-            }
-        }, 0, 10);*/
         addTask(this,"onModelUpdateEvent", new TimerTask() {
             @Override
             public void run() {
+                //TODO: продумать выход из цикла? флаг?
                 while (true) {
                     onModelUpdateEvent();
                     try {

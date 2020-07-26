@@ -1,8 +1,7 @@
 package service;
 
-import log.ExceptionLogger;
-
 import java.util.*;
+import log.ExceptionLogger;
 
 public class Scheduler {
 

@@ -1,8 +1,8 @@
 package gui;
 
+import java.util.Map;
 import javax.swing.*;
 import java.util.HashMap;
-import java.util.Map;
 
 public class StorableJFrame extends JFrame implements Storable {
 
