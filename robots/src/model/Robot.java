@@ -2,7 +2,7 @@ package model;
 
 import log.ExceptionLogger;
 import service.AppliedSolver;
-import service.Taskable;
+import service.management.Taskable;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;

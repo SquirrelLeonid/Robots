@@ -1,6 +1,6 @@
 package gui;
 
-import service.Scheduler;
+import service.management.Scheduler;
 import log.ExceptionLogger;
 import javax.swing.UIManager;
 import javax.swing.SwingUtilities;
