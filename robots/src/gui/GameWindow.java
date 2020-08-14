@@ -1,14 +1,18 @@
 package gui;
 
 import model.Robot;
+import service.localization.Localizer;
 
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ResourceBundle;
 
-public class GameWindow extends StorableJInternalFrame {
-
+public class GameWindow extends StorableJInternalFrame implements PropertyChangeListener
+{
     private final Robot m_robot;
     private final GameVisualizer m_visualizer;
     private final PropertiesKeeperSingleton m_keeper;
@@ -18,12 +22,14 @@ public class GameWindow extends StorableJInternalFrame {
 
     GameWindow(PropertiesKeeperSingleton keeper, Robot robot) {
         super("Игровое поле", true, true, true, true);
+        setName("gameWindow_Title");
         m_robot = robot;
-        m_visualizer = new GameVisualizer(m_robot);
-        initWindowState();
-        initEvents();
         m_keeper = keeper;
+        m_visualizer = new GameVisualizer(m_robot);
+        initEvents();
+        initWindowState();
         keeper.register(this.title, this);
+        Localizer.addPropertyChangeListener(this);
     }
 
     private void initWindowState() {
@@ -47,6 +53,15 @@ public class GameWindow extends StorableJInternalFrame {
     @Override
     public void dispose() {
         m_keeper.unregister(this.title);
+        Localizer.removePropertyChangeListener(this);
         super.dispose();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent)
+    {
+        ResourceBundle bundle = (ResourceBundle)propertyChangeEvent.getNewValue();
+        this.setLocale(bundle.getLocale());
+        this.setTitle(bundle.getString(this.getName()));
     }
 }

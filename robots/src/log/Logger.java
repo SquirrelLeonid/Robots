@@ -3,8 +3,9 @@ package log;
 public final class Logger
 {
     private static final LogWindowSource defaultLogSource;
+    //static и... что это вообще?
     static {
-        defaultLogSource = new LogWindowSource(100);
+        defaultLogSource = new LogWindowSource(10);
     }
     
     private Logger()

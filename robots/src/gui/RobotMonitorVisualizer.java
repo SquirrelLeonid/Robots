@@ -1,22 +1,18 @@
 package gui;
 
 import model.Robot;
-
 import javax.swing.*;
+import java.text.DecimalFormat;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DecimalFormat;
 
 class RobotMonitorVisualizer extends JPanel implements PropertyChangeListener {
-
     private Robot m_robot;
-
     //Unit circle's variables
     private static final int m_circleRadius = 200;
     private static final int m_halfRadius = m_circleRadius / 2;
-
     //Coordinate axis's variables
     private static final int m_ledgeValue = 20;
 
